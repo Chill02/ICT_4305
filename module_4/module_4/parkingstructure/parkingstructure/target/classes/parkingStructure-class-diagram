@@ -1,0 +1,54 @@
+@StarUML
+
+package parkingstructure {
+
+    class Address {
+        - streetAddress1 : String
+        - streetAddress2 : String
+        - city : String
+        - state : String
+        - zipCode : String
+        + getAddressInfo() : String
+    }
+
+    enum CarType {
+        COMPACT
+        SUV
+    }
+
+    class Car {
+        - permit : String
+        - permitExpiration : LocalDate
+        - license : String
+        - type : CarType
+        - owner : String
+        + toString() : String
+    }
+
+    class Customer {
+        - customerId : String
+        - name : String
+        - address : Address
+        - phoneNumber : String
+        + register(license : String, type : CarType) : Car
+        + toString() : String
+    }
+
+    class ParkingLot {
+        - lotId : String
+        - address : Address
+        - capacity : int
+        - cars : List<Car>
+        + entry(car : Car) : void
+        + toString() : String
+    }
+
+    Customer "1" --> "*" Car : registers >
+    ParkingLot "1" --> "*" Car : contains >
+    Customer "1" --> "1" Address
+    ParkingLot "1" --> "1" Address
+    Car --> CarType
+
+}
+
+@pendulum
