@@ -1,0 +1,108 @@
+@StarUML
+
+package parking {
+
+    class Address {
+        - streetAddress1 : String
+        - streetAddress2 : String
+        - city : String
+        - state : String
+        - zipCode : String
+        + getAddressInfo() : String
+    }
+
+    enum CarType {
+        COMPACT
+        SUV
+    }
+
+    class Money {
+        - cents : long
+        + getDollars() : double
+        + toString() : String
+    }
+
+    class Car {
+        - permit : String
+        - permitExpiration : LocalDate
+        - license : String
+        - type : CarType
+        - owner : String
+        + getPermit() : String
+        + getPermitExpiration() : LocalDate
+        + getLicense() : String
+        + getType() : CarType
+        + getOwner() : String
+        + toString() : String
+    }
+
+    class ParkingCharge {
+        - permitId : String
+        - lotId : String
+        - incurred : Instant
+        - amount : Money
+        + getPermitId() : String
+        + getLotId() : String
+        + getIncurred() : Instant
+        + getAmount() : Money
+        + toString() : String
+    }
+
+    class Customer {
+        - customerId : String
+        - name : String
+        - address : Address
+        - phoneNumber : String
+        + register(license : String, type : CarType) : Car
+        + getCustomerId() : String
+        + getName() : String
+        + getAddress() : Address
+        + getPhoneNumber() : String
+        + toString() : String
+    }
+
+    class ParkingOffice {
+        - name : String
+        - address : Address
+        - customers : List<Customer>
+        - cars : List<Car>
+        - lots : List<ParkingLot>
+        - charges : List<ParkingCharge>
+        + register(name : String, address : Address, phone : String) : Customer
+        + register(c : Customer, license : String, t : CarType) : Car
+        + getCustomer(name : String) : Customer
+        + addCharge(charge : ParkingCharge) : Money
+        + addChargeForEntry(car : Car, lot : ParkingLot, amount : Money) : Money
+        + addLot(lot : ParkingLot) : void
+    }
+
+    class ParkingLot {
+        - lotId : String
+        - address : Address
+        - capacity : int
+        - cars : List<Car>
+        - office : ParkingOffice
+        + entry(car : Car) : Money
+        + getLotId() : String
+        + getCarCount() : int
+        + toString() : String
+    }
+
+    Customer "1" --> "1" Address
+    ParkingLot "1" --> "1" Address
+    ParkingOffice "1" --> "1" Address
+
+    Customer "1" --> "*" Car : owns >
+    ParkingOffice "1" --> "*" Customer
+    ParkingOffice "1" --> "*" Car
+    ParkingOffice "1" --> "*" ParkingLot
+    ParkingOffice "1" --> "*" ParkingCharge
+
+    ParkingLot "1" --> "*" Car : contains >
+    Car --> CarType
+    ParkingCharge --> Money
+    ParkingCharge --> ParkingLot : lotId
+    ParkingCharge --> Car : permitId
+
+}
+@pendulum
